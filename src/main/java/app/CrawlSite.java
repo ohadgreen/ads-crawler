@@ -21,6 +21,7 @@ public class CrawlSite {
 
         try {
             HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
+            connection.setRequestMethod("GET");
             Integer responseCode = connection.getResponseCode();
 
             if (responseCode == 200) {
