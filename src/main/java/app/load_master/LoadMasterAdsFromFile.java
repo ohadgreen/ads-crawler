@@ -24,7 +24,6 @@ public class LoadMasterAdsFromFile implements LoadMasterAds{
                 }
             });
 
-
         } catch (IOException e) {
             e.printStackTrace();
             return masterAdsSet;

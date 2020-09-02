@@ -1,4 +1,4 @@
-package app;
+package app.crawler;
 
 import model.AdsSeller;
 import utlis.CommonUtils;

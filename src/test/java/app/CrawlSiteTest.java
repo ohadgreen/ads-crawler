@@ -1,5 +1,6 @@
 package app;
 
+import app.crawler.CrawlSite;
 import model.AdsSeller;
 import org.junit.Test;
 
