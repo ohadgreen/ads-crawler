@@ -18,7 +18,7 @@ public class UpdateSiteAdsToMySqlTableTest {
         Set<AdsSeller> adsSellerSet = adsSellerInit();
         Integer siteId = 999;
 
-        UpdateSiteAdsToMySqlTable updateToDb = new UpdateSiteAdsToMySqlTable();
+        UpdateSiteAds updateToDb = new UpdateSiteAdsToMySqlTable();
         updateToDb.updateAdsList(setConnection(), siteId, adsSellerSet);
 
     }
