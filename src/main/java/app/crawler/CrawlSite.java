@@ -28,7 +28,9 @@ public class CrawlSite {
         Set<AdsSeller> adsSellerSet = new HashSet<>();
         URL myUrl;
         try {
-            myUrl = new URL(this.siteUrl + "/ads.txt");
+            String adsUrl = this.siteUrl.replace("http://", "https://");
+            adsUrl = adsUrl + "/ads.txt";
+            myUrl = new URL(adsUrl);
         } catch (MalformedURLException badUrl) {
             System.out.println("bad URL: " + this.siteUrl);
             return adsSellerSet;
@@ -37,6 +39,11 @@ public class CrawlSite {
         try {
             HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
             connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", "AdsTxtCrawler/1.0");
+            connection.setRequestProperty("Accept", "text/plain");
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(10000);
+
             Integer responseCode = connection.getResponseCode();
 
             if (responseCode == 200) {
@@ -49,7 +56,7 @@ public class CrawlSite {
                 });
             }
 
-            logger.info(" ads # - " + adsSellerSet.size());
+            logger.info("site " + this.siteUrl + " : ads # - " + adsSellerSet.size());
         }
         catch (Exception e) {
             e.printStackTrace();

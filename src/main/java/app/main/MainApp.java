@@ -14,11 +14,15 @@ import java.util.stream.Collectors;
 public class MainApp {
     public static void main(String[] args) {
         MainApp mainApp = new MainApp();
-        mainApp.workManager();
+        try {
+            mainApp.workManager();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    private void workManager() {
+    private void workManager() throws InterruptedException {
         LoadSiteList loadSiteList = new LoadSitesFromFile();
         Set<Site> allSites = loadSiteList.getSiteSet();
         Set<Site> siteSetLimited = allSites.stream().limit(20).collect(Collectors.toSet());
@@ -30,19 +34,16 @@ public class MainApp {
         while (siteIterator.hasNext()) {
             Site site = siteIterator.next();
             if (site.getSiteUrl() != null) {
-                System.out.println(" --- " + site.getSiteUrl());
                 Worker worker = new Worker(site);
                 threadExecutor.execute(worker);
             }
         }
 
-        while (! threadExecutor.isTerminated()) {
-            try {
-                threadExecutor.awaitTermination(1, TimeUnit.SECONDS);
-            }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        Thread.sleep(10000);
+//        threadExecutor.shutdownNow();
+        if (!threadExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+            System.err.println("Pool did not terminate");
+            threadExecutor.shutdownNow();
         }
 
     }

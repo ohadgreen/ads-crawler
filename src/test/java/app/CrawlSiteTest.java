@@ -13,8 +13,19 @@ public class CrawlSiteTest {
 
     @Test
     public void readUrlForSellerInfoSimpleTest() throws IOException {
-        String url1 = "https://www.filmmaking.net";
-        CrawlSite crawlSite = new CrawlSite(url1);
+        String sheredais = "https://sharedais.com";
+        CrawlSite crawlSite = new CrawlSite(sheredais);
+        Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo();
+
+        sellerLineSet.stream().limit(10).forEach(System.out::println);
+    }
+
+    @Test
+    public void testUrlProblem() throws IOException {
+        String panolian = "http://panolian.com";
+        String newCentral = "https://thenewscentral.org";
+
+        CrawlSite crawlSite = new CrawlSite(panolian);
         Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo();
 
         sellerLineSet.stream().limit(10).forEach(System.out::println);
