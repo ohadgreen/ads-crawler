@@ -13,16 +13,18 @@ public class CrawlSiteTest {
 
     @Test
     public void readUrlForSellerInfoSimpleTest() throws IOException {
-        CrawlSite crawlSite = new CrawlSite();
-        Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo("https://www.filmmaking.net/ads.txt");
+        String url1 = "https://www.filmmaking.net";
+        CrawlSite crawlSite = new CrawlSite(url1);
+        Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo();
 
         sellerLineSet.stream().limit(10).forEach(System.out::println);
     }
 
     @Test
     public void readUrlForSellerInfoWrongUrl() throws IOException {
-        CrawlSite crawlSite = new CrawlSite();
-        Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo("https://xxx/feed/ads.txt/");
+        String falseUrl = "xyz";
+        CrawlSite crawlSite = new CrawlSite(falseUrl);
+        Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo();
 
         assertEquals(0, sellerLineSet.size());
     }

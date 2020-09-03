@@ -5,7 +5,7 @@ import model.AdsSeller;
 import java.sql.*;
 import java.util.Set;
 
-public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds{
+public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds, AutoCloseable{
 
     @Override
     public void updateAdsList(Connection connection, Integer siteId, Set<AdsSeller> adsSellerSet) {
@@ -31,9 +31,15 @@ public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds{
                 }
             }
             ps.executeBatch();
+            ps.close();
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+
     }
 }

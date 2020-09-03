@@ -1,23 +1,38 @@
 package app.crawler;
 
 import model.AdsSeller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utlis.CommonUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.invoke.MethodHandles;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
 public class CrawlSite {
 
-    public Set<AdsSeller> readUrlForSellerInfo(String url) throws IOException {
-        URL myUrl = new URL(url);
+    private String siteUrl;
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+
+    public CrawlSite(String siteUrl) {
+        this.siteUrl = siteUrl;
+    }
+
+    public Set<AdsSeller> readUrlForSellerInfo() throws IOException {
         Set<AdsSeller> adsSellerSet = new HashSet<>();
+        URL myUrl;
+        try {
+            myUrl = new URL(this.siteUrl + "/ads.txt");
+        } catch (MalformedURLException badUrl) {
+            System.out.println("bad URL: " + this.siteUrl);
+            return adsSellerSet;
+        }
 
         try {
             HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
@@ -34,6 +49,7 @@ public class CrawlSite {
                 });
             }
 
+            logger.info(" ads # - " + adsSellerSet.size());
         }
         catch (Exception e) {
             e.printStackTrace();
