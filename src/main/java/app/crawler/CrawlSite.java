@@ -24,15 +24,16 @@ public class CrawlSite {
         this.siteUrl = siteUrl;
     }
 
-    public Set<AdsSeller> readUrlForSellerInfo() throws IOException {
+    public Set<AdsSeller> readUrlForSellerInfo() {
         Set<AdsSeller> adsSellerSet = new HashSet<>();
         URL myUrl;
+        String adsUrl = null;
         try {
-            String adsUrl = this.siteUrl.replace("http://", "https://");
+            adsUrl = this.siteUrl.replace("http://", "https://");
             adsUrl = adsUrl + "/ads.txt";
             myUrl = new URL(adsUrl);
         } catch (MalformedURLException badUrl) {
-            System.out.println("bad URL: " + this.siteUrl);
+            System.out.println("bad URL: " + adsUrl);
             return adsSellerSet;
         }
 

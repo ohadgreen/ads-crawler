@@ -1,21 +1,38 @@
 package app.update_site_ads;
 
+import db.MySqlConnection;
 import model.AdsSeller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.*;
+import java.util.Properties;
 import java.util.Set;
 
 public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds, AutoCloseable{
 
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    private Integer siteId;
+    private Set<AdsSeller> adsSellerSet;
+    private String insertStatement;
+    private Properties properties;
+
+    public UpdateSiteAdsToMySqlTable(Integer siteId, Set<AdsSeller> adsSellerSet, String insertStatement, Properties properties) {
+        this.siteId = siteId;
+        this.adsSellerSet = adsSellerSet;
+        this.insertStatement = insertStatement;
+        this.properties = properties;
+    }
+
     @Override
-    public void updateAdsList(Connection connection, Integer siteId, Set<AdsSeller> adsSellerSet) {
+    public void updateAdsList() {
 
         try {
-            PreparedStatement ps = null;
-            String insertStatement = "insert into sites_ads (site_id, exchange_domain, seller_account, payment_type, tag_id)" +
-                    " values (?, ?, ?, ?, ?)";
+            Connection connection = MySqlConnection.getConnection(properties.getProperty("DB_URL"), properties.getProperty("DB_USERNAME"), properties.getProperty("DB_PASSWORD"));
+            PreparedStatement ps;
 
-            ps = connection.prepareStatement(insertStatement);
+            ps = connection.prepareStatement(this.insertStatement);
 
             int i = 0;
             for (AdsSeller adsSeller : adsSellerSet) {
@@ -32,6 +49,9 @@ public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds, AutoCloseable{
             }
             ps.executeBatch();
             ps.close();
+            connection.close();
+
+            logger.info("updated ads to db");
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();

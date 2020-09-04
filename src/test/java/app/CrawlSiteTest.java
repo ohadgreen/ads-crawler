@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 public class CrawlSiteTest {
 
     @Test
-    public void readUrlForSellerInfoSimpleTest() throws IOException {
+    public void readUrlForSellerInfoSimpleTest() {
         String sheredais = "https://sharedais.com";
         CrawlSite crawlSite = new CrawlSite(sheredais);
         Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo();
@@ -21,7 +21,7 @@ public class CrawlSiteTest {
     }
 
     @Test
-    public void testUrlProblem() throws IOException {
+    public void testUrlProblem() {
         String panolian = "http://panolian.com";
         String newCentral = "https://thenewscentral.org";
 
@@ -32,7 +32,7 @@ public class CrawlSiteTest {
     }
 
     @Test
-    public void readUrlForSellerInfoWrongUrl() throws IOException {
+    public void readUrlForSellerInfoWrongUrl() {
         String falseUrl = "xyz";
         CrawlSite crawlSite = new CrawlSite(falseUrl);
         Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo();

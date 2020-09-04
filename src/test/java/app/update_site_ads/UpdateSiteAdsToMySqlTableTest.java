@@ -4,22 +4,29 @@ import db.MySqlConnection;
 import model.AdsSeller;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 import static org.junit.Assert.*;
 
 public class UpdateSiteAdsToMySqlTableTest {
+    Properties properties = new Properties();
 
     @Test
     public void updateAdsListSmokeTest() {
 
+        loadProperties();
         Set<AdsSeller> adsSellerSet = adsSellerInit();
         Integer siteId = 999;
+        String insertStatement = "insert into sites_ads (site_id, exchange_domain, seller_account, payment_type, tag_id)" +
+                " values (?, ?, ?, ?, ?)";
 
-        UpdateSiteAds updateToDb = new UpdateSiteAdsToMySqlTable();
-        updateToDb.updateAdsList(setConnection(), siteId, adsSellerSet);
+        UpdateSiteAds updateToDb = new UpdateSiteAdsToMySqlTable(siteId, adsSellerSet, insertStatement, properties);
+        updateToDb.updateAdsList();
 
     }
 
@@ -42,7 +49,14 @@ public class UpdateSiteAdsToMySqlTableTest {
         return adsSellerSet;
     }
 
-    private Connection setConnection() {
-        return MySqlConnection.getConnection("jdbc:mysql://localhost:3306/infolinks?rewriteBatchedStatements=true", "root", "covid19");
+    private void loadProperties() {
+        String fileName = "application.properties";
+        ClassLoader classLoader = getClass().getClassLoader();
+        try (InputStream input = classLoader.getResourceAsStream(fileName)) {
+            properties.load(input);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
