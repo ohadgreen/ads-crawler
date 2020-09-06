@@ -36,6 +36,10 @@ public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds, AutoCloseable{
 
             int i = 0;
             for (AdsSeller adsSeller : adsSellerSet) {
+                if (adsSeller.getSellerAccountId() == null) {
+                    logger.debug("no seller account " + this.siteId + " - " + adsSeller.toString());
+                }
+
                 ps.setInt(1, siteId);
                 ps.setString(2, adsSeller.getExchangeDomain());
                 ps.setString(3, adsSeller.getSellerAccountId());
@@ -48,10 +52,10 @@ public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds, AutoCloseable{
                 }
             }
             ps.executeBatch();
+//            logger.debug("updated to db: " + ps.getUpdateCount());
             ps.close();
             connection.close();
 
-            logger.info("updated ads to db");
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();

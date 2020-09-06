@@ -17,6 +17,7 @@ import java.util.Set;
 
 public class CrawlSite {
 
+    // TODO: interface
     private String siteUrl;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
@@ -27,10 +28,8 @@ public class CrawlSite {
     public Set<AdsSeller> readUrlForSellerInfo() {
         Set<AdsSeller> adsSellerSet = new HashSet<>();
         URL myUrl;
-        String adsUrl = null;
+        String adsUrl = CommonUtils.formatUrlToAdsCrawl(this.siteUrl);
         try {
-            adsUrl = this.siteUrl.replace("http://", "https://");
-            adsUrl = adsUrl + "/ads.txt";
             myUrl = new URL(adsUrl);
         } catch (MalformedURLException badUrl) {
             System.out.println("bad URL: " + adsUrl);
@@ -56,11 +55,14 @@ public class CrawlSite {
                     }
                 });
             }
+            else {
+                logger.debug("site " + this.siteUrl + "code: " + responseCode);
+            }
 
-            logger.info("site " + this.siteUrl + " : ads # - " + adsSellerSet.size());
+            logger.debug("site " + this.siteUrl + " : ads # - " + adsSellerSet.size());
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.debug("site " + this.siteUrl + e.getMessage());
             return adsSellerSet;
         }
 

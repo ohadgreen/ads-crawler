@@ -39,4 +39,44 @@ public class CrawlSiteTest {
 
         assertEquals(0, sellerLineSet.size());
     }
+
+    @Test
+    public void testLongPaymentType() {
+        String smoking = "https://www.smokingmeatforums.com";
+//        google.com, pub-4968145218643279, DIRECT  f08c47fec0942fa0
+        CrawlSite crawlSite = new CrawlSite(smoking);
+        Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo();
+
+        for (AdsSeller adsSeller : sellerLineSet) {
+            if (adsSeller.getPaymentsType().length() > 10) {
+                System.out.println(adsSeller);
+            }
+        }
+    }
+    @Test
+    public void testDuplicate() {
+        String smoking = "https://www.smokingmeatforums.com";
+        CrawlSite crawlSite = new CrawlSite(smoking);
+        Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo();
+
+        for (AdsSeller adsSeller : sellerLineSet) {
+            if (adsSeller.getTagId().equals("f5ab79cb980f11d1")) {
+                System.out.println(adsSeller);
+            }
+        }
+    }
+
+    @Test
+    public void testMissingSellerAccunt() {
+        String smoking = "https://forum.gsmtutors.com";
+//        google.com, pub-4968145218643279, DIRECT  f08c47fec0942fa0
+        CrawlSite crawlSite = new CrawlSite(smoking);
+        Set<AdsSeller> sellerLineSet = crawlSite.readUrlForSellerInfo();
+
+        for (AdsSeller adsSeller : sellerLineSet) {
+            if (adsSeller.getSellerAccountId() == null) {
+                System.out.println(adsSeller);
+            }
+        }
+    }
 }

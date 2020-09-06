@@ -6,6 +6,8 @@ import db.MySqlConnection;
 import model.Site;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Properties;
@@ -14,13 +16,15 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 public class UpdateSitesToMySqlTableTest {
+    private Properties properties = new Properties();
 
     @Test
     public void updateSiteListSmokeTest() {
+        loadProperties();
         Set<Site> siteSet = getSites(15000);
 
-        UpdateSiteList updateSiteList = new UpdateSitesToMySqlTable();
-        updateSiteList.updateSiteList(setConnection(), siteSet);
+        UpdateSiteList updateSiteList = new UpdateSitesToMySqlTable(siteSet, properties);
+        updateSiteList.updateSiteList();
     }
 
     private Set<Site> getSites(Integer limit) {
@@ -32,7 +36,14 @@ public class UpdateSitesToMySqlTableTest {
         return limitedList;
     }
 
-    private Connection setConnection() {
-        return MySqlConnection.getConnection("jdbc:mysql://localhost:3306/infolinks?rewriteBatchedStatements=true", "root", "covid19");
+    private void loadProperties() {
+        String fileName = "application.properties";
+        ClassLoader classLoader = getClass().getClassLoader();
+        try (InputStream input = classLoader.getResourceAsStream(fileName)) {
+            properties.load(input);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

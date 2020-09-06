@@ -5,11 +5,12 @@ import model.Site;
 
 public class CommonUtils {
     public static AdsSeller parseTextLineToAdsSellerObj(String line) {
+        if (line.contains("#")) {
+            line = line.substring(0, line.indexOf('#'));
+        }
+
         try{
             if (line.length() < 2) {
-                return null;
-            }
-            if (line.charAt(0) == '#') {
                 return null;
             }
 
@@ -17,18 +18,25 @@ public class CommonUtils {
             String[] sellerValues = line.split(",");
 
             if(sellerValues.length > 0 && sellerValues[0].trim().length() > 0) {
-                adsSeller.setExchangeDomain(sellerValues[0].trim());
+                adsSeller.setExchangeDomain(sellerValues[0].trim().toLowerCase());
             }
             if(sellerValues.length > 1 && sellerValues[1].trim().length() > 0) {
-                adsSeller.setSellerAccountId(sellerValues[1].trim());
+                adsSeller.setSellerAccountId(sellerValues[1].trim().toLowerCase());
             }
-            if(sellerValues.length > 2 && sellerValues[2].trim().length() > 0) {
-                adsSeller.setPaymentsType(sellerValues[2].trim());
+            if(sellerValues.length > 2 && sellerValues[2].trim().length() > 0 && sellerValues[2].trim().length() < 10) {
+                adsSeller.setPaymentsType(sellerValues[2].trim().toUpperCase());
             }
             if(sellerValues.length > 3 && sellerValues[3].trim().length() > 0) {
                 adsSeller.setTagId(sellerValues[3].trim());
             }
-            return adsSeller;
+            else {
+                adsSeller.setTagId("<N/A>");
+            }
+            if (adsSeller.getSellerAccountId() != null && adsSeller.getPaymentsType() != null){
+                return adsSeller;
+            }
+            else
+                return null;
         }
         catch (Exception e) {
             return null;
@@ -55,5 +63,12 @@ public class CommonUtils {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static String formatUrlToAdsCrawl(String rawSiteUrl) {
+        if (rawSiteUrl.contains("http://")) {
+            rawSiteUrl = rawSiteUrl.replace("http://", "https://");
+        }
+        return rawSiteUrl + "/ads.txt";
     }
 }
