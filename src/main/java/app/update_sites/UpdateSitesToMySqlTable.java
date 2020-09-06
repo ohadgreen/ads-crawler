@@ -23,7 +23,7 @@ public class UpdateSitesToMySqlTable implements UpdateSiteList {
         try {
             Connection connection = MySqlConnection.getConnection(properties.getProperty("DB_URL"), properties.getProperty("DB_USERNAME"), properties.getProperty("DB_PASSWORD"));
             PreparedStatement ps = null;
-            String insertStatement = "insert into sites (publisher_id, site_index, site_url)" +
+            String insertStatement = "insert into " + properties.getProperty("SITES_TABLE")+ " (publisher_id, site_index, site_url)" +
                     " values (?, ?, ?)";
 
             ps = connection.prepareStatement(insertStatement);
