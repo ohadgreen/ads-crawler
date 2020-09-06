@@ -14,8 +14,11 @@ public class LoadMasterAdsFromFileTest {
         LoadMasterAds loadMasterAds = new LoadMasterAdsFromFile();
         Set<AdsSeller> masterSellerAdsSet = loadMasterAds.getMasterSellerAdsSet();
 
-        masterSellerAdsSet.stream().forEach(System.out::println);
+//        masterSellerAdsSet.stream().forEach(System.out::println);
         assertTrue(masterSellerAdsSet.size() > 0);
 
+        for (AdsSeller masterAd : masterSellerAdsSet) {
+            System.out.println("insert into master_ads values (\"" + masterAd.getExchangeDomain() + "\", \"" + masterAd.getSellerAccountId() + "\", \"" + masterAd.getPaymentsType() + "\", \"" + masterAd.getTagId() + "\");");
+        }
     }
 }

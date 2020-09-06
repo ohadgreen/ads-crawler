@@ -47,8 +47,8 @@ public class MainApp {
     private void workManager() throws InterruptedException {
         LoadSiteList loadSiteList = new LoadSitesFromDb(); // LoadSitesFromFile();
         Set<Site> allSites = loadSiteList.getSiteSet(this.properties);
-        Set<Site> siteSetLimited = allSites.stream().limit(20).collect(Collectors.toSet());
-        String insertStatement = "insert into sites_ads (site_id, exchange_domain, seller_account, payment_type, tag_id)" +
+        Set<Site> siteSetLimited = allSites.stream().limit(100).collect(Collectors.toSet());
+        String insertStatement = "insert into " + properties.getProperty("SITES_ADS_TABLE")+ " (site_id, exchange_domain, seller_account, payment_type, tag_id)" +
                 " values (?, ?, ?, ?, ?)";
         // create ExecutorService to manage threads
         ExecutorService threadExecutor = Executors.newFixedThreadPool(5 );
@@ -65,7 +65,6 @@ public class MainApp {
             sitesCount ++;
         }
 
-//        Thread.sleep(30000);
         threadExecutor.shutdown();
         if (!threadExecutor.awaitTermination(1, TimeUnit.HOURS)) {
             System.err.println("Pool did not terminate yet...");

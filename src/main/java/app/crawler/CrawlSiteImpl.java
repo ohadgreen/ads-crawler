@@ -65,8 +65,8 @@ public class CrawlSiteImpl implements CrawlSite{
             }
             else {
                 logger.debug("site " + this.site.getSiteUrl() + "code: " + responseCode);
+                updateSitesTableWithCrawlError("response code - " + responseCode.toString());
             }
-
             logger.debug("site " + this.site.getSiteId() + " : ads # - " + adsSellerSet.size());
         }
         catch (Exception e) {
