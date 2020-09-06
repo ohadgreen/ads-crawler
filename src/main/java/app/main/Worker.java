@@ -1,5 +1,6 @@
 package app.main;
 
+import app.crawler.CrawlSite;
 import app.crawler.CrawlSiteImpl;
 import app.update_site_ads.UpdateSiteAds;
 import app.update_site_ads.UpdateSiteAdsToMySqlTable;
@@ -28,7 +29,7 @@ public class Worker implements Runnable {
 
     @Override
     public void run() {
-        CrawlSiteImpl crawlSiteImpl = new CrawlSiteImpl(workerSite, properties);
+        CrawlSite crawlSiteImpl = new CrawlSiteImpl(workerSite, properties);
         final Set<AdsSeller> adsSellers = crawlSiteImpl.readUrlForSellerInfo();
 
         if (adsSellers != null && adsSellers.size() > 0) {

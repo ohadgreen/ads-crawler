@@ -66,6 +66,7 @@ public class MainApp {
                 siteSet = loadSiteListFromFile.getSiteSet(properties);
                 // update database sites list from file
                 UpdateSiteList updateSiteListInDb = new UpdateSitesToMySqlTable(siteSet, properties);
+                updateSiteListInDb.updateSiteList();
             }
             else {
                 // load sites from database
