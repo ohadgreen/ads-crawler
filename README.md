@@ -10,5 +10,3 @@ For each url it will:
 2. If the file available, it will insert all valid lines into sites_ads table
 
 After crawl completion, we can analyse the results using queries in analysis_queries.sql file
-
-
