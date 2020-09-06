@@ -1,6 +1,6 @@
 package app.main;
 
-import app.crawler.CrawlSite;
+import app.crawler.CrawlSiteImpl;
 import app.update_site_ads.UpdateSiteAds;
 import app.update_site_ads.UpdateSiteAdsToMySqlTable;
 import model.AdsSeller;
@@ -28,11 +28,12 @@ public class Worker implements Runnable {
 
     @Override
     public void run() {
-        CrawlSite crawlSite = new CrawlSite(workerSite.getSiteUrl());
-        final Set<AdsSeller> adsSellers = crawlSite.readUrlForSellerInfo();
+        CrawlSiteImpl crawlSiteImpl = new CrawlSiteImpl(workerSite, properties);
+        final Set<AdsSeller> adsSellers = crawlSiteImpl.readUrlForSellerInfo();
 
-        UpdateSiteAds updateSiteAds = new UpdateSiteAdsToMySqlTable(workerSite.getSiteId(), adsSellers, insertStatement, properties);
-        updateSiteAds.updateAdsList();
-
+        if (adsSellers != null && adsSellers.size() > 0) {
+            UpdateSiteAds updateSiteAds = new UpdateSiteAdsToMySqlTable(workerSite.getSiteId(), adsSellers, insertStatement, properties);
+            updateSiteAds.updateAdsList();
+        }
     }
 }

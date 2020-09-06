@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.Set;
 
-public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds, AutoCloseable{
+public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds{
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
     private Integer siteId;
@@ -28,8 +28,8 @@ public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds, AutoCloseable{
     @Override
     public void updateAdsList() {
 
-        try {
-            Connection connection = MySqlConnection.getConnection(properties.getProperty("DB_URL"), properties.getProperty("DB_USERNAME"), properties.getProperty("DB_PASSWORD"));
+        try(Connection connection = MySqlConnection.getConnection(properties.getProperty("DB_URL"), properties.getProperty("DB_USERNAME"), properties.getProperty("DB_PASSWORD"))) {
+//            Connection connection = MySqlConnection.getConnection(properties.getProperty("DB_URL"), properties.getProperty("DB_USERNAME"), properties.getProperty("DB_PASSWORD"));
             PreparedStatement ps;
 
             ps = connection.prepareStatement(this.insertStatement);
@@ -53,17 +53,12 @@ public class UpdateSiteAdsToMySqlTable implements UpdateSiteAds, AutoCloseable{
             }
             ps.executeBatch();
 //            logger.debug("updated to db: " + ps.getUpdateCount());
-            ps.close();
+//            ps.close();
             connection.close();
-
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    @Override
-    public void close() throws Exception {
-
-    }
 }
